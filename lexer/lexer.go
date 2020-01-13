@@ -9,12 +9,17 @@ type Lexer struct {
 	ch           byte
 }
 
+// New creates a Lexer struct for the input string and
+// calls readChar to set initial reading position
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
 	l.readChar()
 	return l
 }
 
+// readChar reads current character in input
+// into ch and sets position to current index
+// and readPosition to next index to be read
 func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
 		l.ch = 0
@@ -25,6 +30,7 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
+// NextToken returns the subsequent token in input
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
@@ -93,10 +99,12 @@ func (l *Lexer) NextToken() token.Token {
 	return tok
 }
 
+// newToken returns a new Token struct
 func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
 }
 
+// readIdentifier returns current identifier
 func (l *Lexer) readIdentifier() string {
 	position := l.position
 	for isLetter(l.ch) {
@@ -105,6 +113,7 @@ func (l *Lexer) readIdentifier() string {
 	return l.input[position:l.position]
 }
 
+// readNumber returns current number in input
 func (l *Lexer) readNumber() string {
 	position := l.position
 	for isDigit(l.ch) {
@@ -113,6 +122,8 @@ func (l *Lexer) readNumber() string {
 	return l.input[position:l.position]
 }
 
+// peekChar returns the subsequent character
+// in the input
 func (l *Lexer) peekChar() byte {
 	if l.readPosition >= len(l.input) {
 		return 0
@@ -121,14 +132,17 @@ func (l *Lexer) peekChar() byte {
 	}
 }
 
+// isLetter checks if character is a valid alphabet or underscore
 func isLetter(ch byte) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
+// isDigit checks if character is a valid number
 func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
 }
 
+// skipWhitespace consumes subsequent whitespaces
 func (l *Lexer) skipWhitespace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
 		l.readChar()

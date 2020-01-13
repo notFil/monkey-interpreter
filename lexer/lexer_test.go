@@ -5,6 +5,8 @@ import (
 	"testing"
 )
 
+// TestNextToken tests tokenization of source code
+// input in monkey language by the lexer.
 func TestNextToken(t *testing.T) {
 	input := `let five = 5;
 	let ten = 10 ;
